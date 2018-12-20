@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="msapplication-tap-highlight" content="no">
+        <link rel="stylesheet" href="css/materialize.min.css">
+        <title>ABM Zonas</title>
+        <style>
+            body{
+                background: grey;
+            }
+            h4 {
+                text-align: center;
+                padding-bottom: 1em;
+            }
+            #lstZona tr:nth-child(odd){
+                background: #4cae4c;
+            }
+            #lstZona tr:hover{
+                background: #069ac5 !important;
+            }
+            table{
+                background: white;
+                border: #5a5a5a 2px solid;
+            }
+            table thead {
+                background: #232b37;
+                color:white;
+                font-size: 1.1em;
+            }
+            table th:nth-child(2){
+                width: 90px;
+                text-align: center;
+            }
+            small{
+                font-size: 0.5em;
+            }
+            .bor{
+                background: #ef5350 ;
+            }
+            @media screen and (max-width: 660px) {
+                .row .col.s6 {
+                    display: block !important;
+                    width: 100% !important;
+                    margin-top: 1em;
+                    margin-bottom: 1em;
+               }
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <h4>ABM de Zonas</h4>
+
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col s6">
+
+                    <table class="responsive-table" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Zona</th>
+                            <th>Menu</th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="lstZona">
+                        <tr onclick="EZ()">
+                            <td>Alvin</td>
+                            <td><a class="waves-effect waves-light btn bor" onclick="bz()">Borrar</a></td>
+                        </tr>
+                        <tr>
+                            <td>Alan</td>
+                            <td>Jellybean</td>
+                        </tr>
+                        <tr>
+                            <td>Jonathan</td>
+                            <td>Lollipop</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+                <div class="col s6">
+                    <a class="btn wares-effect yellow darken-2" id="btnNuevo"> Nuevo </a>
+                    <div class="card darken-1" id="Ficha">
+                        <div class="card-content">
+                            <span class="card-title">Ficha - <small id="IDS">0</small></span>
+
+                            <div class="input-field col offset-l s10 ">
+                                <input  type="text" class="validate" id="zona">
+                                <label for="zona">Zona</label>
+
+                            </div>
+                            <br>
+                        </div>
+                        <div class="card-action">
+                            <div class="row">
+                                <div class="col s6">
+                                    <a class="btn wares-effect light-blue" id="btnGrabar"> Grabar </a>
+                                </div>
+                                <div class="col s6">
+                                    <a class="btn waves-effect waves-red" id="btnLimpiar" > Limpiar </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+            </div>
+
+        </div>
+
+
+
+        <script src="js/materialize.js"></script>
+
+         <script>
+             const Ruta="Data/dbZona.php";
+             const Ficha=document.getElementById('Ficha');
+             const IDS=document.getElementById('IDS');
+             var Zona=document.getElementById("zona");
+             
+             function Limpiar() {
+                 IDS.innerText="";
+                 Zona.value="";
+             }
+             
+             document.getElementById('btnNuevo').addEventListener("click",function () {
+                Ficha.style.display="block";
+                 Limpiar();
+             });
+             
+             document.getElementById('btnLimpiar').addEventListener("click",function () {
+                 Ficha.style.display="none";
+                 Limpiar();
+             });
+             
+             function CargaLST() {
+
+                 document.getElementById('lstZona').innerHTML=tabla;
+             }
+
+            
+             function EZ(id) {
+                 /* ************************************************************ */
+                 $.get( Ruta+"?id="+id ,function (res) {
+                     let tmp = JSON.parse(res);
+                     const d = tmp['Data'][0];
+                     document.getElementById('Idpro').innerText = d.idPro;
+                     document.getElementById('ima1').setAttribute("src", "../../../" + d.Portada);
+                     document.getElementById('ima2').setAttribute("src", "../../../" + d.Plano);
+                     document.getElementById('Alqui').value = d.Alqui;
+
+                     let Alq = document.getElementById('IsAlqui');
+                     let Ven = document.getElementById('IsVenta');
+
+                     if (d.Alqui == "A") {
+                         Alq.style.display = 'block';
+                         Ven.style.display = 'none';
+                         document.getElementById('Mascota').value = d.Mascotas;
+                     } else {
+                         Alq.style.display = 'none';
+                         Ven.style.display = 'block';
+                         document.getElementById('Credito').value = d.Credi;
+                     }
+
+                     $('#Tipo').select2().select2('val', d.TipoID);
+                     $('#Zona').select2().select2('val', d.ZonaID);
+
+                 });
+                 /* ************************************************************** */
+             }
+             
+             function bz(id) {
+                 
+             }
+         </script>
+    </body>
+</html>
