@@ -53,7 +53,10 @@
     </head>
 
     <body>
-        <h4>ABM de Zonas</h4>
+
+  <?php include 'menu.php'; ?>
+
+    <h4>ABM de Zonas</h4>
 
 
         <div class="container">
@@ -70,18 +73,10 @@
                         </thead>
 
                         <tbody id="lstZona">
-                        <tr onclick="EZ()">
-                            <td>Alvin</td>
-                            <td><a class="waves-effect waves-light btn bor" onclick="bz()">Borrar</a></td>
-                        </tr>
                         <tr>
-                            <td>Alan</td>
-                            <td>Jellybean</td>
+                            <td> Cargando ....</td><td></td>
                         </tr>
-                        <tr>
-                            <td>Jonathan</td>
-                            <td>Lollipop</td>
-                        </tr>
+
                         </tbody>
                     </table>
 
@@ -119,14 +114,15 @@
         </div>
 
 
-
-        <script src="js/materialize.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/materialize.js"></script>
 
          <script>
              const Ruta="Data/dbZona.php";
              const Ficha=document.getElementById('Ficha');
              const IDS=document.getElementById('IDS');
              var Zona=document.getElementById("zona");
+
              
              function Limpiar() {
                  IDS.innerText="";
@@ -135,53 +131,81 @@
              
              document.getElementById('btnNuevo').addEventListener("click",function () {
                 Ficha.style.display="block";
-                 Limpiar();
+                Limpiar();
              });
              
+             document.getElementById('btnGrabar').addEventListener("click",function () {
+                 document.getElementById('btnGrabar').style.display="none";
+                 let Zonas=Zona.value.toUpperCase();
+                 let idz= IDS.innerText;
+                if(Zonas.length > 3){
+                    var d={ID:idz,Zona:Zonas};
+                    $.post(Ruta,d,function () {
+                        CargaLST();
+                        alert("Grabado");
+                        Limpiar();
+                        document.getElementById('btnGrabar').style.display="block";
+                    });
+
+                }else{
+                    alert("Zona muy corta");
+                    document.getElementById('btnGrabar').style.display="block";
+                }
+
+             });
+
              document.getElementById('btnLimpiar').addEventListener("click",function () {
                  Ficha.style.display="none";
                  Limpiar();
              });
-             
              function CargaLST() {
+                 $.get( Ruta+"?all",function (res) {
+                     let tmp = JSON.parse(res);
+                     let x= tmp["DataLst"].length;
+                     let tabla="";
 
-                 document.getElementById('lstZona').innerHTML=tabla;
+                     for(let i=0;i< x; i++){
+                         tabla =tabla + '<tr onclick="EZ('+ tmp['DataLst'][i].idZ +')"><td>'+ tmp['DataLst'][i].Zona +'</td><td><a class="waves-effect waves-light btn bor" onclick="bz('+ tmp['DataLst'][i].idZ +')">Borrar</a></td></tr>';
+                     }
+                     document.getElementById('lstZona').innerHTML=tabla;
+                 });
              }
 
             
              function EZ(id) {
                  /* ************************************************************ */
                  $.get( Ruta+"?id="+id ,function (res) {
+                     Ficha.style.display="block";
                      let tmp = JSON.parse(res);
                      const d = tmp['Data'][0];
-                     document.getElementById('Idpro').innerText = d.idPro;
-                     document.getElementById('ima1').setAttribute("src", "../../../" + d.Portada);
-                     document.getElementById('ima2').setAttribute("src", "../../../" + d.Plano);
-                     document.getElementById('Alqui').value = d.Alqui;
-
-                     let Alq = document.getElementById('IsAlqui');
-                     let Ven = document.getElementById('IsVenta');
-
-                     if (d.Alqui == "A") {
-                         Alq.style.display = 'block';
-                         Ven.style.display = 'none';
-                         document.getElementById('Mascota').value = d.Mascotas;
-                     } else {
-                         Alq.style.display = 'none';
-                         Ven.style.display = 'block';
-                         document.getElementById('Credito').value = d.Credi;
-                     }
-
-                     $('#Tipo').select2().select2('val', d.TipoID);
-                     $('#Zona').select2().select2('val', d.ZonaID);
-
+                     console.log(d);
+                     IDS.innerHTML = d.idZ;
+                     Zona.value= d.Zona;
+                     Zona.focus();
                  });
                  /* ************************************************************** */
              }
              
              function bz(id) {
-                 
+                 if(confirm("Borrar Zona, Seguro?")){
+                     $.get( Ruta+"?d="+id ,function (res) {
+                         Ficha.style.display="none";
+                         CargaLST();
+                         Limpiar();
+                     });
+                 }
+
              }
          </script>
+
+        <script>
+            (function (){
+                CargaLST();
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.sidenav');
+                    var instances = M.Sidenav.init(elems, options);
+                });
+            })();
+        </script>
     </body>
 </html>

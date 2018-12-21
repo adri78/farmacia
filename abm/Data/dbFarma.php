@@ -9,29 +9,34 @@
 
 include 'dbconfig.php';
 
-$all= "SELECT `iddu`, `contacto`, `tel`, `domicio` FROM `t_duenio` ORDER BY `contacto` ASC;"; // all
-$xID="SELECT `iddu`, `contacto`, `tel`, `domicio` FROM `t_duenio` WHERE `iddu`=?"; //id
-$del='DELETE FROM `t_duenio` WHERE `iddu`=?';  // d
-$Up='UPDATE `t_duenio` SET `contacto`=?,`tel`=?,`domicio`=? WHERE `iddu`=?' ;
+$all= "SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,(SELECT `Zona` FROM `t_zona` WHERE `idZ`=`zonaid`) AS Zonas FROM `t_f` ORDER BY `Farmacia`,Zonas  ASC;"; // all
+$xID="SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,(SELECT `Zona` FROM `t_zona` WHERE `idZ`=`zonaid`) AS Zonas FROM `t_f`  WHERE `ID`=?"; //id
+$del='DELETE FROM `t_f` WHERE `ID`=?';  // d
+$Up='UPDATE `t_f` SET `Farmacia`=?,`Domicilio`=?,`Telefonos`=?,`Email`=?,`zonaid`=? WHERE `ID`=?' ;
 
-$In="INSERT INTO `t_duenio`(`contacto`, `tel`, `domicio`) VALUES (?,?,?)";
+$In="INSERT INTO `t_f`( `Farmacia`, `Domicilio`, `Telefonos`, `Email`, `zonaid`) VALUES (?,?,?,?,?)";
 
 if(isset($_POST['ID'])) {
      $ID= (int) $_POST['ID'] ;
 
      // Emparejo los campos  {Dato:Data,ID:Id,Tel:tel,Domicilio:Domicilio};
-    $Data1 =(isset($_POST["Dato"]))? strtoupper( $_POST['Dato']):"No definida";// contacto
+    $Farmacia =(isset($_POST["Farmacia"]))? strtoupper( $_POST['Farmacia']):"No definida";// contacto
     $Tel =(isset($_POST["Tel"]))? strtoupper( $_POST['Tel']):"No definido";// contacto
-    $Domicilio =(isset($_POST["Domicilio"]))? strtoupper( $_POST['Domicilio']):"No definida";// contacto
+    $Domicilio =(isset($_POST["Domicilio"]))? strtoupper( $_POST['Domicilio']):"No definido";// contacto
+    $Email =(isset($_POST["Email"]))? strtoupper( $_POST['Email']):"No definido";
+    $Zona=(isset($_POST["Zona"]))? strtoupper( $_POST['Zona']):"No definido";
 
     if($ID>0){
         $stmt = $DBcon->prepare($Up);
-        $stmt->execute([$Data1,$Tel,$Domicilio,$ID]);
+        $stmt->execute([$Farmacia,$Domicilio,$Tel,$Email,$Zona,$ID]);
     }else{
         $stmt = $DBcon->prepare($In);
-        $stmt->bindParam(1, $Data1);
-        $stmt->bindParam(2, $Tel);
-        $stmt->bindParam(3, $Domicilio);
+        $stmt->bindParam(1, $Farmacia);
+        $stmt->bindParam(2, $Domicilio);
+        $stmt->bindParam(3, $Tel);
+        $stmt->bindParam(4, $Email);
+        $stmt->bindParam(5, $Zona);
+        $stmt->bindParam(7, $ID);
         $stmt->execute();
     }
 }
@@ -47,7 +52,7 @@ if(isset($_POST['ID'])) {
         $userData = array();
 
         while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-            $userData['ALLData'][] = $row;
+            $userData['DataLst'][] = $row;
         }
         echo json_encode($userData);
     }

@@ -1,5 +1,5 @@
 /.sass-cache
-/ignorar
-/.idea
-/src
+ignorar/
+.idea/
+src/
 

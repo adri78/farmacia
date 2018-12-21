@@ -42,7 +42,7 @@ if(isset($_POST['ID'])) {
         $userData = array();
 
         while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
-            $userData['ALLData'][] = $row;
+            $userData['DataLst'][] = $row;
         }
         echo json_encode($userData);
     }
@@ -69,5 +69,5 @@ if(isset($_POST['ID'])) {
         $stmt_delete->execute([$id]);
     }
 
-$stmt->close();
+//$stmt->close();
 ?>
