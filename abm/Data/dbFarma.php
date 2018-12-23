@@ -10,7 +10,7 @@
 include 'dbconfig.php';
 
 $all= "SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,(SELECT `Zona` FROM `t_zona` WHERE `idZ`=`zonaid`) AS Zonas FROM `t_f` ORDER BY `Farmacia`,Zonas  ASC;"; // all
-$xID="SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,(SELECT `Zona` FROM `t_zona` WHERE `idZ`=`zonaid`) AS Zonas FROM `t_f`  WHERE `ID`=?"; //id
+$xID="SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,`zonaid` AS Zonas FROM `t_f`  WHERE `ID`=?"; //id
 $del='DELETE FROM `t_f` WHERE `ID`=?';  // d
 $Up='UPDATE `t_f` SET `Farmacia`=?,`Domicilio`=?,`Telefonos`=?,`Email`=?,`zonaid`=? WHERE `ID`=?' ;
 
