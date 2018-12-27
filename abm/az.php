@@ -179,7 +179,7 @@
             const btnGrabar = document.getElementById('btnGrabar');
             const btnLimpiar = document.getElementById('btnLimpiar');
             const Buscar=document.getElementById('buscar');
-            let X2,X3;
+            var X2,X3;
 
             function EF(id){
                 $.get( Ruta+"?id="+id,function (res) {
@@ -242,40 +242,47 @@
 
             function CargaLST() {
                 $.get( Ruta+"?all",function (res) {
-                    X2= JSON.parse(res);
-                    MostrarTabla(X2);
+                    X3=JSON.parse(res);
+                   console.log("Cargado ...");
                 });
             }
-/*
 
+            function DTablas(tmp){
+                let x=tmp["DataLst"].length;
+                let tabla="";
+                for(let i=0;i< x; i++){
+                    tabla =tabla + '<tr onclick="EF('+ tmp['DataLst'][i].ID +')"><td>'+ tmp['DataLst'][i].Farmacia +'</td><td>' + tmp['DataLst'][i].Domicilio +'</td><td>'+tmp['DataLst'][i].Telefonos+'</td><td>'+tmp['DataLst'][i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ tmp['DataLst'][i].ID +')">Borrar</a></td></tr>';
+                }
+                document.getElementById('lstFarma').innerHTML=tabla;
+            }
 
- let x= tmp["DataLst"].length;
-                    let tabla="";
-                    for(let i=0;i< x; i++){
-                        tabla =tabla + '<tr onclick="EF('+ tmp['DataLst'][i].ID +')"><td>'+ tmp['DataLst'][i].Farmacia +'</td><td>' + tmp['DataLst'][i].Domicilio +'</td><td>'+tmp['DataLst'][i].Telefonos+'</td><td>'+tmp['DataLst'][i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ tmp['DataLst'][i].ID +')">Borrar</a></td></tr>';
-                    }
-                    document.getElementById('lstFarma').innerHTML=tabla;
- */
-            function MostrarTabla(Data) {
-                let y= Data["DataLst"].length;
-                let X= Data["DataLst"];
+            function MostrarTabla(obj) {
+                let X=JSON.parse(obj);
+                let y= X.length;
                 let tabla="";
                 for(let i=0;i< y; i++){
                     tabla =tabla + '<tr onclick="EF('+ X[i].ID +')"><td>'+ X[i].Farmacia +'</td><td>' + X[i].Domicilio +'</td><td>'+X[i].Telefonos+'</td><td>'+X[i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].ID +')">Borrar</a></td></tr>';
                 }
                 document.getElementById('lstFarma').innerHTML=tabla;
-            }
 
+            }
         </script>
         <script>
             const Filtrando= Buscar.addEventListener("keyup", function () {
-
+                console.log(Buscar.value);
                 let bus=Buscar.value.toUpperCase();
+                let x=0;
+                X2=document.querySelectorAll('#lstFarma tr');
+                const total=X2.length;
+                if(bus.length >2){
+                    for(let x=0; x<total ; x++){
+                        X2[x].style.display="none";
 
-                X3=X2["DataLst"].filter(function(item) {
-                    return item.Farmacia == bus;
-                });
+                    }
+                }else{
 
+                }
+                    X3=X2.filter(bus);
 
                 MostrarTabla(X3);
 

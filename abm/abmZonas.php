@@ -123,7 +123,6 @@
              const Ficha=document.getElementById('Ficha');
              const IDS=document.getElementById('IDS');
              var Zona=document.getElementById("zona");
-
              
              function Limpiar() {
                  IDS.innerText="";
