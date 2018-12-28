@@ -138,7 +138,7 @@
 
         <div class="col s9">
 
-            <table class="responsive-table" width="100%">
+            <table class="responsive-table" width="100%" id="TablaFarma">
                 <thead>
                 <tr>
                     <th>Farmacia</th>
@@ -193,6 +193,10 @@
                     Email.value=x.Email;
                     LstZonas.value=x.Zonas;
 
+                    let elemento = document.querySelectorAll("form label");
+                    for (let i = 0; i < elemento.length; i++) {
+                        elemento[i].classList.add("active");
+                    }
 
                 });
 
@@ -246,16 +250,41 @@
                     MostrarTabla(X2);
                 });
             }
-/*
 
 
- let x= tmp["DataLst"].length;
-                    let tabla="";
-                    for(let i=0;i< x; i++){
-                        tabla =tabla + '<tr onclick="EF('+ tmp['DataLst'][i].ID +')"><td>'+ tmp['DataLst'][i].Farmacia +'</td><td>' + tmp['DataLst'][i].Domicilio +'</td><td>'+tmp['DataLst'][i].Telefonos+'</td><td>'+tmp['DataLst'][i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ tmp['DataLst'][i].ID +')">Borrar</a></td></tr>';
+            function sortTable(TBody_Tabla_ID,Columna=0,Orden="Asc") {
+                var table, rows, switching, i, x, y, shouldSwitch;
+                table = document.getElementById(TBody_Tabla_ID);
+                switching = true;
+                while (switching) {
+                    switching = false;
+                    rows = table.rows;
+                    for (i = 1; i < (rows.length - 1); i++) {
+                        shouldSwitch = false;
+                        x = rows[i].getElementsByTagName("TD")[Columna];
+                        y = rows[i + 1].getElementsByTagName("TD")[Columna];
+                        if(Orden == "Asc"){
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }else{
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
                     }
-                    document.getElementById('lstFarma').innerHTML=tabla;
- */
+                    if (shouldSwitch) {
+                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                        switching = true;
+                    }
+                }
+            }
+
+
+
+
             function MostrarTabla(Data) {
                 let y= Data["DataLst"].length;
                 let X= Data["DataLst"];
@@ -264,24 +293,43 @@
                     tabla =tabla + '<tr onclick="EF('+ X[i].ID +')"><td>'+ X[i].Farmacia +'</td><td>' + X[i].Domicilio +'</td><td>'+X[i].Telefonos+'</td><td>'+X[i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].ID +')">Borrar</a></td></tr>';
                 }
                 document.getElementById('lstFarma').innerHTML=tabla;
+                Monitor_Tabla('TablaFarma');
             }
 
+    const Filtrando= Buscar.addEventListener("keyup", function () {
+        let bus=Buscar.value.trim().toUpperCase();
+            if( bus.length > 1){
+               let y= document.querySelectorAll('#lstFarma tr');
+               let z=y.length;
+                for(let x=0; x< z; x++){
+                    if( y[x].innerText.indexOf(bus) >= 0 ){
+                       y[x].style.display='table-row';
+                    }else{
+                       y[x].style.display='none';
+                    }
+                }
+            }else{
+                let y= document.querySelectorAll('#bTabla tr');
+                let z=y.length;
+                for(let x=0; x< z; x++){
+                    y[x].style.display='table-row';
+                }
+            }
+    });
+
+    function Monitor_Tabla(Tabla) {
+         let cabe = document.querySelectorAll( "#"+ Tabla +" thead th");
+         const x=cabe.length;
+         if (x>0 ){
+             for (let i = 0; i < x; i++) {
+                  cabe[i].addEventListener("click", function () {
+                          sortTable(Tabla,i);
+                  });
+             }
+         }
+    }
         </script>
         <script>
-            const Filtrando= Buscar.addEventListener("keyup", function () {
-
-                let bus=Buscar.value.toUpperCase();
-
-                X3=X2["DataLst"].filter(function(item) {
-                    return item.Farmacia == bus;
-                });
-
-
-                MostrarTabla(X3);
-
-
-            });
-
 
 
             (function () {
