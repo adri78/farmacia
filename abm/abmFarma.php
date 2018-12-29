@@ -168,7 +168,7 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/materialize.js"></script>
-        <script>
+    <script>
             var Ruta="Data/dbFarma.php";
             const ID = document.getElementById('idF');
             const Farmacia = document.getElementById('Farmacia');
@@ -197,14 +197,11 @@
                     for (let i = 0; i < elemento.length; i++) {
                         elemento[i].classList.add("active");
                     }
-
                 });
-
             }
             function BF(id) {
                 if(confirm("Borrar Farmacia, Seguro?")){
                     $.get( Ruta+"?d="+id ,function (res) {
-                        Ficha.style.display="none";
                         CargaLST();
                         Limpiar();
                     });
@@ -220,7 +217,6 @@
                 LstZonas.value=0;
             }
 
-
             const Limpiador = btnLimpiar.addEventListener("click",function (e) {
                 e.preventDefault();
                 Limpiar();
@@ -231,28 +227,27 @@
                 var instances = M.FormSelect.init(elems);
             });
 
-            function Cargacmb() {
-                $.get( "Data/dbZona.php?all",function (res) {
+    function Cargacmb() {
+         $.get( "Data/dbZona.php?all",function (res) {
                     let tmp = JSON.parse(res);
                     let x= tmp["DataLst"].length;
                     let zonas='<option value="" disabled selected>Zona</option>';
 
-                    for(let i=0;i< x; i++){
-                        zonas =zonas + '<option value="'+ tmp["DataLst"][i].idZ +'">'+ tmp["DataLst"][i].Zona +'</option>';
-                    }
-                    document.getElementById('LstZonas').innerHTML=zonas;
-                });
-            }
+         for(let i=0;i< x; i++){
+              zonas =zonas + '<option value="'+ tmp["DataLst"][i].idZ +'">'+ tmp["DataLst"][i].Zona +'</option>';
+         }
+           document.getElementById('LstZonas').innerHTML=zonas;
+         });
+    }
 
-            function CargaLST() {
-                $.get( Ruta+"?all",function (res) {
-                    X2= JSON.parse(res);
-                    MostrarTabla(X2);
-                });
-            }
+    function CargaLST() {
+         $.get( Ruta+"?all",function (res) {
+               X2= JSON.parse(res);
+               MostrarTabla(X2);
+         });
+    }
 
-
-            function sortTable(TBody_Tabla_ID,Columna=0,Orden="Asc") {
+    function sortTable(TBody_Tabla_ID,Columna=0,Orden="Asc") {
                 var table, rows, switching, i, x, y, shouldSwitch;
                 table = document.getElementById(TBody_Tabla_ID);
                 switching = true;
@@ -282,39 +277,39 @@
                 }
             }
 
-
-
-
-            function MostrarTabla(Data) {
-                let y= Data["DataLst"].length;
-                let X= Data["DataLst"];
-                let tabla="";
-                for(let i=0;i< y; i++){
-                    tabla =tabla + '<tr onclick="EF('+ X[i].ID +')"><td>'+ X[i].Farmacia +'</td><td>' + X[i].Domicilio +'</td><td>'+X[i].Telefonos+'</td><td>'+X[i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].ID +')">Borrar</a></td></tr>';
-                }
-                document.getElementById('lstFarma').innerHTML=tabla;
-                Monitor_Tabla('TablaFarma');
-            }
+    function MostrarTabla(Data) {
+         let y= Data["DataLst"].length;
+         let X= Data["DataLst"];
+         let tabla="";
+         for(let i=0;i< y; i++){
+               tabla =tabla + '<tr onclick="EF('+ X[i].ID +')"><td>'+ X[i].Farmacia +'</td><td>' + X[i].Domicilio +'</td><td>'+X[i].Telefonos+'</td><td>'+X[i].Zonas+ '</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].ID +')">Borrar</a></td></tr>';
+         }
+         document.getElementById('lstFarma').innerHTML=tabla;
+         Buscar.setAttribute("title", y + "/"+ y);
+          Monitor_Tabla('TablaFarma');
+    }
 
     const Filtrando= Buscar.addEventListener("keyup", function () {
-        let bus=Buscar.value.trim().toUpperCase();
-            if( bus.length > 1){
-               let y= document.querySelectorAll('#lstFarma tr');
-               let z=y.length;
-                for(let x=0; x< z; x++){
+        let bus=Buscar.value.trim().toUpperCase()
+        let y= document.querySelectorAll('#lstFarma tr');
+        let z=y.length;
+        let a=z;
+            if( bus.length > 2){
+                a=0;
+               for(let x=0; x< z; x++){
                     if( y[x].innerText.indexOf(bus) >= 0 ){
                        y[x].style.display='table-row';
+                       a++;
                     }else{
                        y[x].style.display='none';
                     }
-                }
+               }
             }else{
-                let y= document.querySelectorAll('#bTabla tr');
-                let z=y.length;
                 for(let x=0; x< z; x++){
                     y[x].style.display='table-row';
                 }
             }
+        Buscar.setAttribute("title", a + "/"+ z);
     });
 
     function Monitor_Tabla(Tabla) {
@@ -328,9 +323,40 @@
              }
          }
     }
-        </script>
-        <script>
 
+</script>
+<script>
+    btnGrabar.addEventListener("click",function (e) {
+        e.preventDefault();
+        btnGrabar.style.display='none';
+        if(Farmacia.length){
+            alert("Falta la Farmacia");
+            Farmacia.focus();
+            btnGrabar.style.display='inline-block';
+            return;
+        }
+        if(Domicilio.length){
+            alert("Falta la Domicilio");
+            Domicilio.focus();
+            btnGrabar.style.display='inline-block';
+            return;
+        }
+        if(LstZonas.value < 1){
+            alert("Falta Zona");
+            LstZonas.focus();
+            btnGrabar.style.display='inline-block';
+            return;
+        }
+
+        let d={ID:ID.innerText,Farmacia:Farmacia.value,Tel:Tel.value,Domicilio:Domicilio.value,Email:Email.value,Zona:LstZonas.value}
+        $.post(Ruta,d,function (r) {
+            CargaLST();
+            Limpiar();
+            btnGrabar.style.display='inline-block';
+        });
+
+
+    });
 
             (function () {
                 Cargacmb();

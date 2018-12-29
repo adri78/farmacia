@@ -12,17 +12,15 @@ include 'dbconfig.php';
 $all= "SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,(SELECT `Zona` FROM `t_zona` WHERE `idZ`=`zonaid`) AS Zonas FROM `t_f` ORDER BY `Farmacia`,Zonas  ASC;"; // all
 $xID="SELECT `ID`, `Farmacia`, `Domicilio`, `Telefonos`, `Email`,`zonaid` AS Zonas FROM `t_f`  WHERE `ID`=?"; //id
 $del='DELETE FROM `t_f` WHERE `ID`=?';  // d
-$Up='UPDATE `t_f` SET `Farmacia`=?,`Domicilio`=?,`Telefonos`=?,`Email`=?,`zonaid`=? WHERE `ID`=?' ;
+$Up='UPDATE `t_f` SET `Farmacia`=?,`Domicilio`=?,`Telefonos`=?,`Email`=?,`zonaid`=? WHERE `ID`=?';
 
 $In="INSERT INTO `t_f`( `Farmacia`, `Domicilio`, `Telefonos`, `Email`, `zonaid`) VALUES (?,?,?,?,?)";
 
 if(isset($_POST['ID'])) {
-     $ID= (int) $_POST['ID'] ;
-
-     // Emparejo los campos  {Dato:Data,ID:Id,Tel:tel,Domicilio:Domicilio};
-    $Farmacia =(isset($_POST["Farmacia"]))? strtoupper( $_POST['Farmacia']):"No definida";// contacto
-    $Tel =(isset($_POST["Tel"]))? strtoupper( $_POST['Tel']):"No definido";// contacto
-    $Domicilio =(isset($_POST["Domicilio"]))? strtoupper( $_POST['Domicilio']):"No definido";// contacto
+    $ID= (int) $_POST['ID'];
+    $Farmacia =(isset($_POST["Farmacia"]))? strtoupper( $_POST['Farmacia']):"No definida";
+    $Tel =(isset($_POST["Tel"]))? strtoupper( $_POST['Tel']):"No definido";
+    $Domicilio =(isset($_POST["Domicilio"]))? strtoupper( $_POST['Domicilio']):"No definido";
     $Email =(isset($_POST["Email"]))? strtoupper( $_POST['Email']):"No definido";
     $Zona=(isset($_POST["Zona"]))? strtoupper( $_POST['Zona']):"No definido";
 
@@ -36,7 +34,7 @@ if(isset($_POST['ID'])) {
         $stmt->bindParam(3, $Tel);
         $stmt->bindParam(4, $Email);
         $stmt->bindParam(5, $Zona);
-        $stmt->bindParam(7, $ID);
+       // $stmt->bindParam(7, $ID);
         $stmt->execute();
     }
 }
