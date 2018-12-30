@@ -9,7 +9,7 @@
 
 include 'dbconfig.php';
 
-$all= "SELECT `idZ`, `Zona` FROM `t_zona` ORDER BY `Zona` ASC;;"; // all
+$all= "SELECT `idZ`, `Zona` FROM `t_zona` ORDER BY `Zona` ASC;"; // all
 $xID="SELECT `idZ`, `Zona` FROM `t_zona` WHERE `idZ`=?"; //id
 $del='DELETE FROM `t_zona` WHERE `idZ`=?';  // d
 $Up='UPDATE `t_zona` SET `Zona`=? WHERE `idZ`=?' ;

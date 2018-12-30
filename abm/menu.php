@@ -3,8 +3,8 @@
 
 $Menu='<li><a href="abmZonas.php">ABM Zonas </a></li>
                 <li><a href="abmFarma.php">ABM Farmacias</a></li>
-                <li><a href="collapsible.html">Javascript</a></li>
-                <li><a href="mobile.html">Mobile</a></li>';
+                <li><a href="abmTurnos.php">Turnos</a></li>
+                <li><a href="index.php">Varios</a></li><li><a href="Notas.php">Notas</a></li>';
 ?>
 
    <nav>

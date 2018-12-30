@@ -77,5 +77,25 @@ if(isset($_POST['ID'])) {
         $stmt_delete->execute([$id]);
     }
 
+// Listar
+
+if(isset($_GET['z'])){
+    $z= (int) $_GET['z'];
+    if ($z==0){
+        $query ="SELECT `ID`, `Farmacia` FROM `t_f` ORDER BY `Farmacia` ASC;";
+
+    }else{
+        $query ="SELECT `ID`, `Farmacia` FROM `t_f` WHERE `zonaid`=". $z . " ORDER BY `Farmacia` ASC;";
+    }
+
+    $stmt = $DBcon->prepare($query);
+    $stmt->execute();
+    $userData = array();
+
+    while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+        $userData['DataLst'][] = $row;
+    }
+    echo json_encode($userData);
+}
 /* ********************************************************* */
 ?>
