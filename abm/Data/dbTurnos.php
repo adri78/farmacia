@@ -13,7 +13,7 @@ $hoy=date("Y-m-d");
 
 
 $all= "SELECT `IDT`, `Farmacia` ,(SELECT `Zona` FROM `t_zona` WHERE `idZ`= `zonaid`) AS `Zona`, `fni` as Fecha FROM `t_t`,`t_f` WHERE (`fid`=`ID`) and `fni` >='".$hoy."' ;"; // all
-$xID="SELECT `IDT`, `fid`, `fni` FROM `t_t` WHERE `IDT`=?"; //id
+$xID="SELECT `IDT`, `fid`,`zonaid` , `fni` FROM `t_t`,`t_f` WHERE (`fid`=`ID`) and `IDT`=?"; //id
 $xDia="SELECT `IDT`, `fid`, `fni` FROM `t_t` WHERE `fni`=?";
 
 
@@ -26,8 +26,8 @@ if(isset($_POST['ID'])) {
     $ID= (int) $_POST['ID'] ;
     $Far=(isset($_POST["Far"]))? strtoupper( $_POST['Far']):"Fallo";
     $Fecha=(isset($_POST["Fecha"]))? strtoupper( $_POST['Fecha']):$hoy;
-    $Repe=(isset($_POST["Repe"]))? strtoupper( $_POST['Repe']):0;
-    $Cada=(isset($_POST["Cada"]))? strtoupper( $_POST['Cada']):0;
+    $Repe=(isset($_POST["Repe"]))? ( $_POST['Repe']):'off';
+    $Cada=(isset($_POST["Cada"]))? (int) $_POST['Cada']:0;
 
 
 
@@ -39,6 +39,19 @@ if(isset($_POST['ID'])) {
         $stmt->bindParam(1, $Far);
         $stmt->bindParam(2, $Fecha);
         $stmt->execute();
+
+        echo $Repe;
+        if(($Repe)&&($Cada > 0)){
+            echo
+             $FechaFin=date('Y-m-d', strtotime("$Fecha + 365 day")) ;
+                 while ( $FechaFin>$Fecha) {
+                     $Fecha=date('Y-m-d', strtotime("$Fecha + $Cada day"));
+                     $stmt->bindParam(1, $Far);
+                     $stmt->bindParam(2, $Fecha);
+                     $stmt->execute();
+
+                 }
+        }
     }
 }
 
@@ -74,6 +87,18 @@ if(isset($_POST['ID'])) {
         echo json_encode($userData);
     }
 
+// xDia
+if(isset($_GET['di'])){
+      $query ="SELECT `IDT`, `Farmacia` ,(SELECT `Zona` FROM `t_zona` WHERE `idZ`= `zonaid`) AS `Zona`, `fni` as Fecha FROM `t_t`,`t_f` WHERE (`fid`=`ID`) and `fni`='".$_GET['di'] ."';"; //id
+     //echo $query;
+    $stmt = $DBcon->prepare($query);
+    $stmt->execute();
+    $userData = array();
+    while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+        $userData['DataLst'][] = $row;
+    }
+    echo json_encode($userData);
+}
 
 // Por ID
 

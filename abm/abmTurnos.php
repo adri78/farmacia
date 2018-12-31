@@ -77,6 +77,7 @@
         <div class="col m5 offset-m3" style="text-align: right;padding-top: 20px;">
             <div class="search-wrapper">
                 <i class="material-icons"><input id="buscar" placeholder="Filtro">search</i>
+                <a class="btn" id="ALL" style="margin-left: 70px;"> Ver Todos </a>
             </div>
         </div>
     </div>
@@ -127,17 +128,14 @@
                     <a class="btn" id="btnGrabar"> Grabar </a>
                 </div>
                 <div class="col s6">
-                    <a class="btn" id="btnLimpiar"> Limpiar</a>
+                    <a class="btn" onclick="Limpiar()"> Limpiar</a>
                 </div>
             </div>
         </div>
 
 
 
-
-
-
-        <div class="col s9">
+        <div class="col s9" style="max-height: 79vh;overflow-x: auto;">
             <table class="responsive-table" width="100%"id="tTurno">
                 <thead>
                     <tr>
@@ -181,7 +179,6 @@
               for(let i=0;i< x; i++){
                   zonas =zonas + '<option value="'+ tmp["DataLst"][i].idZ +'">'+ tmp["DataLst"][i].Zona +'</option>';
               }
-              console.log(zonas);
               LstZonas.innerHTML=zonas;
           });
       }
@@ -197,6 +194,14 @@
               LstFarmacia.innerHTML=Farmas;
           });
       }
+
+      const ALL= document.getElementById('ALL').addEventListener('click',function (e) {
+          e.preventDefault();
+          $.get( Ruta+"?all",function (res) {
+              X2= JSON.parse(res);
+              MostrarTabla(X2);
+          });
+      });
 
       const lstf = LstZonas.addEventListener("change" , function (e) {
            CargaFarma(LstZonas.value);
@@ -234,17 +239,28 @@
       }
 
       function MostrarTabla(Data) {
-          let y= Data["DataLst"].length;
-          let X= Data["DataLst"];
           let tabla="";
-          for(let i=0;i< y; i++){
-              tabla =tabla + '<tr onclick="EF('+ X[i].ID +')"><td>'+ X[i].Fecha+'</td><td>' + X[i].Farmacia +'</td><td>'+X[i].Zona +'</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].ID +')">Borrar</a></td></tr>';
-          }
+         try{
+             let y= Data["DataLst"].length;
+             let X= Data["DataLst"];
+             for(let i=0;i< y; i++){
+                 tabla =tabla + '<tr onclick="EF('+ X[i].IDT +')"><td>'+ X[i].Fecha+'</td><td>' + X[i].Farmacia +'</td><td>'+X[i].Zona +'</td><td><a class="waves-effect waves-light btn bor" onclick="BF('+ X[i].IDT +')">Borrar</a></td></tr>';
+             }
+             Buscar.setAttribute("title", y + "/"+ y);
+
+         }catch (e) {
+             tabla ="<tr style='background: rgba(6,191,236,0.62)'><td> Vacio </td><td></td><td></td><td></td></tr>";
+         }
           document.getElementById('LstTurno').innerHTML=tabla;
-          Buscar.setAttribute("title", y + "/"+ y);
           Monitor_Tabla('tTurno');
       }
 
+      Day.addEventListener("change" , function (e) {
+          $.get( Ruta+"?di="+ Day.value ,function (res) {
+              X2= JSON.parse(res);
+              MostrarTabla(X2);
+          });
+      });
 
 
       const Filtrando= Buscar.addEventListener("keyup", function () {
@@ -309,7 +325,7 @@
 
           let d={ID:ID.innerText,Far:LstFarmacia.value,Fecha:Day.value,Repe:Repe.value,Cada:Cada.value}
           $.post(Ruta,d,function (r) {
-
+                console.log(r);
               alert("Grabado");
               btnGrabar.style.display='inline-block';
           });
@@ -318,6 +334,45 @@
       });
 
 
+      function EF(id){
+          $.get( Ruta+"?id="+id,function (res) {
+              let tmp = JSON.parse(res);
+              const x=tmp["Data"][0];
+
+              ID.innerText=x.IDT;
+              Day.value=x.fni;
+              document.querySelector("#Day + label").classList.add('active');
+              let XX=x.zonaid;
+              let far=x.fid;
+              LstZonas.value=XX;
+
+              $.get( "Data/dbFarma.php?z="+XX ,function (res) {
+                  let tmp = JSON.parse(res);
+                  let x= tmp["DataLst"].length;
+                  let Farmas='';
+                  for(let i=0;i< x; i++){
+                      Farmas =Farmas + '<option value="'+ tmp["DataLst"][i].ID +'">'+ tmp["DataLst"][i].Farmacia +'</option>';
+                  }
+                  LstFarmacia.innerHTML=Farmas;
+                  LstFarmacia.value= far;
+              });
+          });
+      }
+
+    function BF(id) {
+         if(confirm("Borrar el turno de la Farmacia, Seguro?")){
+              $.get( Ruta+"?d="+id ,function (res) {
+                   Limpiar();
+              });
+         }
+
+    }
+
+      function Limpiar(){
+          ID.innerText="";
+          Day.value="";
+          CargaTurnos(0);
+      }
 
       (function () {
 

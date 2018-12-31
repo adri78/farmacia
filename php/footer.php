@@ -95,9 +95,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="copyright">
-                    COPYRIGHT &copy; Colfarmabrown 2017. ALL RIGHT RESERVED.
+                    COPYRIGHT &copy; Colfarmabrown 2018. ALL RIGHT RESERVED.
                     <div>
-                        Power: <i class="ion-heart"></i> by <a href="http://soporte360.online">Soporte360.online</a>
+                        Power: <a href="http://soporte360.online">Soporte360.online</a>
                     </div>
                 </div>
             </div>

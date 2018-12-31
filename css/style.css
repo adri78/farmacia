@@ -945,7 +945,7 @@ section.search .search-result {
   fill: transparent;
   stroke: transparent;
   stroke-dasharray: 0;
-  stroke-width: 3;
+  stroke-width: 3px;
   transition: all 1.5s;
   -moz-transition: all 1.5s;
   -webkit-transition: all 1.5s;
@@ -3162,7 +3162,7 @@ footer.footer .tags li a:hover {
 }
 footer.footer .copyright {
   text-align: center;
-  margin-top: 70px;
+  margin-top: 5px;
   color: #848f9a;
   border-top: 1px solid #222;
   padding-top: 35px;
