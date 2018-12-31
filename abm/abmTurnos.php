@@ -16,10 +16,8 @@
             padding-bottom: 10px;
 
         }
-        #lstFarma tr:nth-child(odd){
-            background: #c7c7c7;
-        }
-        #lstFarma tr:hover{
+
+        #LstTurno tr:hover{
             background: #069ac5 !important;
         }
         #idF{
@@ -132,8 +130,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <div class="col s9" style="max-height: 79vh;overflow-x: auto;">
             <table class="responsive-table" width="100%"id="tTurno">

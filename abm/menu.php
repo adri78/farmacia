@@ -2,9 +2,10 @@
 <?php
 
 $Menu='<li><a href="abmZonas.php">ABM Zonas </a></li>
-                <li><a href="abmFarma.php">ABM Farmacias</a></li>
-                <li><a href="abmTurnos.php">Turnos</a></li>
-                <li><a href="index.php">Varios</a></li><li><a href="Notas.php">Notas</a></li>';
+       <li><a href="abmFarma.php">ABM Farmacias</a></li>
+       <li><a href="abmTurnos.php">Turnos</a></li>
+       <li><a href="index.php">Varios</a></li>
+       <li><a href="Notas.php">Notas</a></li>';
 ?>
 
    <nav>
