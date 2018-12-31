@@ -3,13 +3,13 @@
  */
 /* Colors */
 .skin-purple a {
-  color: #8e44ad;
+  color: #8dc88f;
 }
 .skin-purple a:hover, .skin-purple a:focus {
   color: #461B93;
 }
 .skin-purple .badge-primary {
-  background-color: #8e44ad;
+  background-color: #8dc88f;
 }
 .skin-purple .for-mobile, .skin-purple .for-tablet {
   display: none !important;
